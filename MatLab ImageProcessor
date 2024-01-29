@@ -1,0 +1,56 @@
+%% Basic Image Processing in MATLAB with User Interaction
+
+%% Introduction
+% This script now includes user interaction to select an input image and choose a filter.
+
+%% Selecting an Image
+[filename, pathname] = uigetfile({'*.jpg;*.png;*.tif', 'All Image Files'; '*.*', 'All Files'}, 'Select an Image');
+if isequal(filename,0)
+   disp('User selected Cancel');
+   return;
+else
+   img = imread(fullfile(pathname, filename));
+end
+
+%% Displaying the Original Image
+figure;
+imshow(img);
+title('Original Image');
+
+%% Choosing a Filter
+choice = menu('Choose a filter', 'Grayscale', 'Invert Colors', 'Gaussian Blur', 'Histogram Equalization');
+
+switch choice
+    case 1 % Grayscale
+        processedImg = rgb2gray(img);
+        titleText = 'Grayscale Image';
+    case 2 % Invert Colors
+        processedImg = imcomplement(img);
+        titleText = 'Inverted Colors Image';
+    case 3 % Gaussian Blur
+        processedImg = imgaussfilt(img, 2);
+        titleText = 'Gaussian Blur Image';
+    case 4 % Histogram Equalization
+        processedImg = histeq(rgb2gray(img));
+        titleText = 'Histogram Equalization Image';
+    otherwise
+        disp('No filter selected');
+        return;
+end
+
+%% Displaying the Processed Image
+figure;
+imshow(processedImg);
+title(titleText);
+
+%% Saving the Processed Image
+[save_filename, save_pathname] = uiputfile({'*.png';'*.jpg';'*.tif'}, 'Save Processed Image as');
+if isequal(save_filename,0)
+    disp('User selected Cancel');
+else
+    imwrite(processedImg, fullfile(save_pathname, save_filename));
+end
+
+%% Conclusion
+% This enhanced LiveScript demonstrates the use of basic user interactions in MATLAB
+% for selecting an image, applying a chosen filter, and saving the processed image.
